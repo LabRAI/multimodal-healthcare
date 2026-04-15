@@ -1,5 +1,5 @@
 # Safety, Socioeconomic, and Ethical Risks of Multimodal AI in Healthcare
-## A Systematic Survey of Medical Vision-Language Models (Med-LVLMs)
+
 
 > **Scope**: This document focuses on risks arising from the deployment of multimodal AI models — particularly Medical Large Vision-Language Models (Med-LVLMs) — in clinical and healthcare settings. For each major risk category, at least four specific sub-risks are identified, each illustrated with a concrete real-world or literature-grounded example, followed by representative papers and their research angles.
 
