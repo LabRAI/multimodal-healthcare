@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safety Risks of Multimodal AI in Healthcare</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f1;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --border: #e2ddd6;
+  --border2: #cdc8be;
+  --text: #1c1a17;
+  --text-muted: #5a5248;
+  --text-faint: #a09888;
+  --gold: #8b6818;
+  --gold-dim: #e8d9b8;
+  --teal: #1a7a74;
+  --teal-dim: #c2e8e5;
+  --red: #c03040;
+  --red-dim: #fad8db;
+  --purple: #5c3db0;
+  --purple-dim: #e0d8f8;
+  --amber: #b55e1a;
+  --green: #287a52;
+  --blue: #2a6ab0;
+
+  --cat1: #8b6818;
+  --cat2: #1a7a74;
+  --cat3: #b55e1a;
+  --cat4: #5c3db0;
+  --cat5: #c03040;
+  --cat6: #287a52;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── SUBTLE DOT GRID TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, #cdc8be 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+/* ── TOP HEADER HERO ── */
+.hero {
+  position: relative;
+  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 60px) clamp(36px, 5vw, 60px);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #faf8f4 0%, #f2ede4 50%, #f5f1eb 100%);
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse at center, rgba(139,104,24,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 1.2vw, 11px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: clamp(16px, 3vw, 28px);
+  opacity: 0;
+  animation: fadeUp 0.6s 0.1s ease forwards;
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.35rem, 2.8vw, 5rem);
+  font-weight: 600;
+  line-height: 1.18;
+  color: #1c1a17;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: clamp(14px, 2vw, 22px);
+  opacity: 0;
+  animation: fadeUp 0.7s 0.2s ease forwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: var(--text-muted);
+  max-width: 780px;
+  margin-bottom: clamp(24px, 4vw, 36px);
+  font-weight: 300;
+  line-height: 1.65;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.3s ease forwards;
+}
+
+.speaker-line {
+  font-size: clamp(12px, 1.4vw, 14px);
+  color: var(--text-muted);
+  margin-bottom: clamp(12px, 2vw, 16px);
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.28s ease forwards;
+  display: block;
+}
+.speaker-line::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--gold);
+  vertical-align: middle;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.speaker-link {
+  text-decoration: none;
+  color: inherit;
+}
+.speaker-link strong {
+  color: var(--text);
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--gold-dim);
+  transition: border-color 0.2s, color 0.2s;
+}
+.speaker-link:hover strong {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.hero-meta {
+  display: flex;
+  gap: clamp(12px, 3vw, 32px);
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.4s ease forwards;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: clamp(11px, 1.2vw, 13px);
+  color: var(--text-muted);
+}
+
+.meta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 32px 0;
+  background: #faf8f5;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+  z-index: 200;
+}
+
+/* ── MOBILE MENU BUTTON ── */
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 300;
+  width: 42px;
+  height: 42px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.mobile-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-muted);
+  border-radius: 2px;
+  transition: all 0.25s;
+}
+.mobile-menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.mobile-menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.mobile-menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── SIDEBAR OVERLAY (MOBILE) ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+}
+.sidebar-overlay.active { display: block; }
+
+.sidebar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 0 24px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.nav-section {
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 24px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: rgba(0,0,0,0.04);
+  border-left-color: var(--gold);
+}
+
+.nav-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.nav-sub {
+  padding: 5px 24px 5px 38px;
+  font-size: 12px;
+  color: var(--text-faint);
+  text-decoration: none;
+  display: block;
+  transition: color 0.2s;
+  line-height: 1.4;
+}
+
+.nav-sub:hover { color: var(--text-muted); }
+
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 24px;
+}
+
+.sidebar-ref-link {
+  display: block;
+  padding: 8px 24px;
+  font-size: 12px;
+  color: var(--teal);
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  font-weight: 500;
+}
+.sidebar-ref-link:hover { opacity: 1; text-decoration: underline; }
+
+/* ── MAIN CONTENT ── */
+.main {
+  padding: clamp(28px, 5vw, 64px) clamp(20px, 5vw, 72px);
+  min-width: 0;
+  width: 100%;
+}
+
+/* ── SECTION ── */
+.section {
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.section:nth-child(1) { animation-delay: 0.1s; }
+.section:nth-child(2) { animation-delay: 0.15s; }
+.section:nth-child(3) { animation-delay: 0.2s; }
+.section:nth-child(4) { animation-delay: 0.25s; }
+.section:nth-child(5) { animation-delay: 0.3s; }
+.section:nth-child(6) { animation-delay: 0.35s; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+}
+
+.section-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #1c1a17;
+  line-height: 1.2;
+}
+
+.section-core {
+  background: var(--surface2);
+  border-left: 3px solid;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 20px;
+  margin-bottom: 36px;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── RISK CARD ── */
+.risk-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 28px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.risk-card:hover {
+  border-color: var(--border2);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.risk-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.risk-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.risk-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+}
+
+.risk-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.risk-body {
+  padding: 0 24px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.risk-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+/* ── EXAMPLE BOX ── */
+.example-box {
+  background: #faf7f2;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  position: relative;
+}
+
+.example-box::before {
+  content: 'CASE EXAMPLE';
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  background: #faf7f2;
+  padding: 0 8px;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.example-box p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.example-box strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── PAPER LIST ── */
+.papers-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 18px 0 10px;
+}
+
+.paper-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.paper-item:last-child { border-bottom: none; }
+
+.paper-ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 32px;
+}
+
+.paper-content { flex: 1; }
+
+.paper-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--teal);
+  text-decoration: none;
+  line-height: 1.4;
+  display: block;
+  transition: color 0.2s;
+}
+
+.paper-title:hover { color: #0f5a55; text-decoration: underline; }
+
+.paper-title.no-link {
+  color: var(--text);
+  cursor: default;
+}
+
+.paper-desc {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ── SUMMARY TABLE ── */
+.summary-section {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+.summary-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1c1a17;
+  margin-bottom: 24px;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.summary-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--surface2);
+}
+
+.summary-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.summary-table tr:hover td { background: #faf8f4; }
+
+.cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── REFERENCES SECTION ── */
+.ref-section {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 2px solid var(--border2);
+}
+
+.ref-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1c1a17;
+  margin-bottom: 8px;
+}
+
+.ref-subtitle {
+  font-size: 13px;
+  color: var(--text-faint);
+  margin-bottom: 32px;
+}
+
+.ref-group {
+  margin-bottom: 36px;
+}
+
+.ref-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.ref-entry {
+  display: flex;
+  gap: 14px;
+  padding: 8px 0;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.ref-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  flex-shrink: 0;
+  width: 38px;
+  margin-top: 2px;
+}
+
+.ref-text { color: var(--text-muted); }
+
+.ref-link {
+  color: var(--teal);
+  text-decoration: none;
+  font-style: italic;
+  transition: color 0.2s;
+}
+
+.ref-link:hover { color: #0f5a55; text-decoration: underline; }
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 60px;
+  padding: 32px clamp(20px, 5vw, 64px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-faint);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE: LARGE DESKTOP ── */
+@media (min-width: 1400px) {
+  .layout { grid-template-columns: 280px 1fr; }
+  .main { padding: 64px 80px; }
+}
+
+/* ── RESPONSIVE: TABLET / SMALL DESKTOP ── */
+@media (max-width: 1024px) {
+  .layout { grid-template-columns: 220px 1fr; }
+  .main { padding: 40px 36px; }
+  .hero { padding: 56px 40px 48px; }
+  .summary-table { font-size: 12px; }
+  .summary-table th, .summary-table td { padding: 10px 12px; }
+}
+
+/* ── RESPONSIVE: MOBILE (sidebar becomes drawer) ── */
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: none;
+    z-index: 200;
+  }
+  .sidebar.open {
+    left: 0;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  }
+
+  .mobile-menu-btn { display: flex; }
+
+  .main {
+    padding: 24px 18px;
+    padding-top: 72px; /* room for hamburger button */
+  }
+
+  .hero {
+    padding: 56px 20px 36px;
+  }
+  /* h1, hero-sub, speaker-line, hero-meta now handled by clamp() — no overrides needed */
+  .hero-meta { gap: 14px; }
+  .speaker-line { font-size: 13px; }
+
+  .section { margin-bottom: 52px; }
+  .section-title { font-size: 1.5rem; }
+  .section-header { gap: 10px; }
+
+  .risk-header { padding: 14px 16px; flex-wrap: wrap; gap: 8px; }
+  .risk-body { padding: 0 16px 18px; }
+  .risk-title { font-size: 14px; }
+
+  .example-box { padding: 14px 14px; }
+
+  .paper-item { flex-direction: column; gap: 4px; }
+  .paper-ref { width: auto; }
+
+  .summary-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  .ref-entry { flex-direction: column; gap: 2px; }
+  .ref-id { width: auto; }
+
+  footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 20px; }
+  .back-top { bottom: 20px; right: 16px; }
+}
+
+/* ── RESPONSIVE: VERY SMALL MOBILE ── */
+@media (max-width: 400px) {
+  .hero h1 { font-size: 1.5rem; }
+  .risk-title { font-size: 13px; }
+  .risk-tag { font-size: 9px; }
+}
+
+/* ── COLOR SCHEMES PER SECTION ── */
+.s1 .section-icon { background: rgba(139,104,24,0.1); }
+.s1 .section-title { color: #1c1a17; }
+.s1 .section-core { border-color: var(--cat1); background: #fdf9f0; }
+.s1 .risk-tag { background: rgba(139,104,24,0.1); color: var(--cat1); border: 1px solid rgba(139,104,24,0.2); }
+.s1 .nav-item:hover { border-left-color: var(--cat1); }
+
+.s2 .section-icon { background: rgba(26,122,116,0.1); }
+.s2 .section-core { border-color: var(--cat2); background: #f0faf9; }
+.s2 .risk-tag { background: rgba(26,122,116,0.1); color: var(--cat2); border: 1px solid rgba(26,122,116,0.2); }
+
+.s3 .section-icon { background: rgba(181,94,26,0.1); }
+.s3 .section-core { border-color: var(--cat3); background: #fdf5ee; }
+.s3 .risk-tag { background: rgba(181,94,26,0.1); color: var(--cat3); border: 1px solid rgba(181,94,26,0.2); }
+
+.s4 .section-icon { background: rgba(92,61,176,0.1); }
+.s4 .section-core { border-color: var(--cat4); background: #f5f0fc; }
+.s4 .risk-tag { background: rgba(92,61,176,0.1); color: var(--cat4); border: 1px solid rgba(92,61,176,0.2); }
+
+.s5 .section-icon { background: rgba(192,48,64,0.1); }
+.s5 .section-core { border-color: var(--cat5); background: #fef0f1; }
+.s5 .risk-tag { background: rgba(192,48,64,0.1); color: var(--cat5); border: 1px solid rgba(192,48,64,0.2); }
+
+.s6 .section-icon { background: rgba(40,122,82,0.1); }
+.s6 .section-core { border-color: var(--cat6); background: #f0faf5; }
+.s6 .risk-tag { background: rgba(40,122,82,0.1); color: var(--cat6); border: 1px solid rgba(40,122,82,0.2); }
+
+/* ── BACK TO TOP ── */
+.back-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 40px;
+  height: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: all 0.2s;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.back-top:hover {
+  background: var(--surface2);
+  color: var(--gold);
+  border-color: var(--gold-dim);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.13);
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU BUTTON -->
+<button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle navigation">
+  <span></span><span></span><span></span>
+</button>
+<div class="sidebar-overlay" id="overlay"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-tag">Talk Outline · Medical AI Safety</div>
+  <h1>Safety, Socioeconomic &amp; Ethical Risks of <em>Multimodal AI in Healthcare</em></h1>
+  <p class="speaker-line">Speaker: <a href="https://yushundong.github.io" target="_blank" class="speaker-link"><strong>Yushun Dong</strong></a>, Assistant Professor, Department of Computer Science, Florida State University</p>
+  <p class="hero-sub">A systematic survey of Medical Vision-Language Models (Med-LVLMs) — risk categories, case examples, and key literature</p>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-dot"></span>6 Risk Categories</div>
+    <div class="meta-item"><span class="meta-dot" style="background:var(--teal)"></span>24 Specific Sub-risks</div>
+    <div class="meta-item"><span class="meta-dot" style="background:var(--red)"></span>54 Papers Referenced</div>
+    <div class="meta-item"><span class="meta-dot" style="background:var(--green)"></span>Updated April 2026</div>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR NAV -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-label">Contents</div>
+
+    <div class="nav-section">
+      <a href="#s1" class="nav-item">
+        <span class="nav-num">01</span>
+        <span>Clinical Safety</span>
+      </a>
+      <a href="#s1-1" class="nav-sub">Hallucination &amp; Misdiagnosis</a>
+      <a href="#s1-2" class="nav-sub">Unreliable Decision Support</a>
+      <a href="#s1-3" class="nav-sub">Cross-Modal Misinterpretation</a>
+      <a href="#s1-4" class="nav-sub">Outdated Knowledge</a>
+      <a href="#s1-5" class="nav-sub">Over-reliance &amp; Halo Effect</a>
+    </div>
+
+    <div class="nav-section">
+      <a href="#s2" class="nav-item">
+        <span class="nav-num">02</span>
+        <span>Privacy &amp; Cybersecurity</span>
+      </a>
+      <a href="#s2-1" class="nav-sub">Data Leakage &amp; Inference Attacks</a>
+      <a href="#s2-2" class="nav-sub">Prompt Injection</a>
+      <a href="#s2-3" class="nav-sub">Adversarial Examples</a>
+      <a href="#s2-4" class="nav-sub">Backdoor Attacks</a>
+    </div>
+
+    <div class="nav-section">
+      <a href="#s3" class="nav-item">
+        <span class="nav-num">03</span>
+        <span>Algorithmic Bias &amp; Equity</span>
+      </a>
+      <a href="#s3-1" class="nav-sub">Racial &amp; Skin Tone Bias</a>
+      <a href="#s3-2" class="nav-sub">Gender &amp; Physiological Bias</a>
+      <a href="#s3-3" class="nav-sub">Geographic Inequality</a>
+      <a href="#s3-4" class="nav-sub">Proxy Variable Bias</a>
+    </div>
+
+    <div class="nav-section">
+      <a href="#s4" class="nav-item">
+        <span class="nav-num">04</span>
+        <span>Multimodal-Specific Risks</span>
+      </a>
+      <a href="#s4-1" class="nav-sub">Cross-Modality Jailbreak</a>
+      <a href="#s4-2" class="nav-sub">Mismatched Input Attacks</a>
+      <a href="#s4-3" class="nav-sub">Implicit Reasoning Safety</a>
+      <a href="#s4-4" class="nav-sub">RAG Knowledge Poisoning</a>
+    </div>
+
+    <div class="nav-section">
+      <a href="#s5" class="nav-item">
+        <span class="nav-num">05</span>
+        <span>Ethics &amp; Liability</span>
+      </a>
+      <a href="#s5-1" class="nav-sub">Accountability Vacuum</a>
+      <a href="#s5-2" class="nav-sub">Black-box Opacity</a>
+      <a href="#s5-3" class="nav-sub">Informed Consent</a>
+      <a href="#s5-4" class="nav-sub">Deceptive Design</a>
+    </div>
+
+    <div class="nav-section">
+      <a href="#s6" class="nav-item">
+        <span class="nav-num">06</span>
+        <span>Socioeconomic Impact</span>
+      </a>
+      <a href="#s6-1" class="nav-sub">Technology Resource Gap</a>
+      <a href="#s6-2" class="nav-sub">Workforce Disruption</a>
+      <a href="#s6-3" class="nav-sub">Data Colonialism</a>
+      <a href="#s6-4" class="nav-sub">Commercial Conflicts</a>
+    </div>
+
+    <div class="nav-divider"></div>
+    <a href="#references" class="sidebar-ref-link">→ All References (54)</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════
+         SECTION 1: CLINICAL SAFETY
+    ═══════════════════════════════════ -->
+    <section class="section s1" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <div class="section-icon">⚕</div>
+        <h2 class="section-title">Clinical Safety Risks</h2>
+      </div>
+      <p class="section-core">Multimodal models in clinical settings generate inaccurate, unreliable, or harmful medical information that directly threatens patient safety.</p>
+
+      <!-- 1.1 -->
+      <div class="risk-card" id="s1-1">
+        <div class="risk-header">
+          <span class="risk-num">1.1</span>
+          <span class="risk-title">Hallucination &amp; Misdiagnosis</span>
+          <span class="risk-tag">High Severity</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Models generate plausible-sounding but factually incorrect medical content — fabricating pathological findings, producing erroneous diagnoses, or confabulating non-existent references.</p>
+          <div class="example-box">
+            <p>The <strong>MedVH benchmark</strong> revealed that medical fine-tuned LVLMs (LLaVA-Med, Med-Flamingo) perform <em>worse</em> on hallucination tests than general-purpose GPT-4V — a striking "fine-tuning paradox" where domain specialization increases hallucination susceptibility in chest X-ray VQA and report generation.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R1</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12363988/" class="paper-title" target="_blank">MedVH: Toward Systematic Evaluation of Hallucination for Large Vision Language Models in the Medical Context</a>
+              <p class="paper-desc">Gu et al., 2024 — Six-task hallucination evaluation framework; reveals fine-tuning–hallucination tradeoff in domain-specific medical LVLMs.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R2</span>
+            <div class="paper-content">
+              <a href="https://github.com/Zhihong-Zhu/Medical_Hallucination_Survey" class="paper-title" target="_blank">Can We Trust AI Doctors? A Survey of Medical Hallucination in LLMs and LVLMs</a>
+              <p class="paper-desc">Zhu et al., ACL 2025 — Taxonomizes medical hallucinations as consistency (misdiagnosis) vs. completeness (missed diagnosis) types; 100+ paper survey.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R3</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2406.06007" class="paper-title" target="_blank">CARES: A Comprehensive Benchmark of Trustworthiness in Medical Vision Language Models</a>
+              <p class="paper-desc">Xia et al., NeurIPS 2024 — Evaluates across five trust dimensions (truthfulness, fairness, safety, privacy, robustness); 41K QA pairs, 16 modalities.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R4</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2503.05777" class="paper-title" target="_blank">Medical Hallucination in Foundation Models and Their Impact on Healthcare</a>
+              <p class="paper-desc">Survey, 2025 — Clinician survey (n=70): 91.8% encountered medical hallucinations; 84.7% consider them capable of causing patient harm.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R53</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11815294/" class="paper-title" target="_blank">The Clinicians' Guide to LLMs: A General Perspective With a Focus on Hallucinations</a>
+              <p class="paper-desc">Roustan &amp; Bastardot, IJMR 2025 — Practical guide for clinicians on hallucination root causes and their cascade effects on clinical reasoning.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.2 -->
+      <div class="risk-card" id="s1-2">
+        <div class="risk-header">
+          <span class="risk-num">1.2</span>
+          <span class="risk-title">Unreliable Clinical Decision Support</span>
+          <span class="risk-tag">Critical</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Models systematically amplify rather than flag embedded clinical errors, propagating and elaborating on false information inserted in realistic clinical scenarios.</p>
+          <div class="example-box">
+            <p><em>Communications Medicine</em> (Omar et al., 2025): 300 clinician-designed vignettes each containing one deliberate error. Six leading LLMs repeated or elaborated on the planted error in <strong>up to 83%</strong> of cases. A mitigation prompt reduced this to ~41% — still clinically unacceptable.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R6</span>
+            <div class="paper-content">
+              <a href="https://www.nature.com/articles/s43856-025-01021-3" class="paper-title" target="_blank">Multi-model Assurance Analysis: LLMs Are Highly Vulnerable to Adversarial Hallucination Attacks During Clinical Decision Support</a>
+              <p class="paper-desc">Omar et al., Communications Medicine 2025 — 83% error propagation rate across six leading LLMs using clinician-planted vignettes.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R7</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">GPT-4V(ision) Unsuitable for Clinical Care and Education: A Clinician-Evaluated Assessment</span>
+              <p class="paper-desc">Bedi et al., 2024 — Clinician-led evaluation of GPT-4V across real clinical cases; concludes current multimodal models are not fit for clinical deployment.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R9</span>
+            <div class="paper-content">
+              <a href="https://www.nature.com/articles/s41746-025-01670-7" class="paper-title" target="_blank">A Framework to Assess Clinical Safety and Hallucination Rates of LLMs for Medical Text Summarisation</a>
+              <p class="paper-desc">npj Digital Medicine, 2025 — 12,999 annotated sentences; 1.47% hallucination rate; 3.45% omission rate — omissions posing greater clinical danger.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.3 -->
+      <div class="risk-card" id="s1-3">
+        <div class="risk-header">
+          <span class="risk-num">1.3</span>
+          <span class="risk-title">Visual-Language Cross-Modal Misinterpretation</span>
+          <span class="risk-tag">High Severity</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Models fail to correctly integrate imaging content with textual context, producing outputs that contradict visual reality — or answering "correctly" without genuinely processing the image.</p>
+          <div class="example-box">
+            <p><strong>MediConfusion</strong> specifically tests cases clinicians consider diagnostically obvious. Mainstream Med-VLMs produce misleading diagnoses on exactly these unambiguous cases — revealing fundamental cross-modal reasoning failure, not merely knowledge gaps.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R10</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">MediConfusion: Can You Trust Your AI Radiologist? Probing the Reliability of Multimodal Medical Foundation Models</span>
+              <p class="paper-desc">2024 — Tests Med-VLMs on clinician-designated "easy" cases; exposes systematic diagnostic failures on unambiguous imaging scenarios.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R12</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">An Embarrassingly Simple Probing Evaluation of Large Multimodal Models in Medical VQA</span>
+              <p class="paper-desc">Yan et al., 2024 — Image-swapping probes show many Med-LVLMs answer without processing the image, relying on text-only biases.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R13</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Detecting and Evaluating Medical Hallucinations in Large Vision Language Models</span>
+              <p class="paper-desc">Chen et al., 2023 — Early foundational work on hallucination detection methodology for medical LVLMs; establishes evaluation baselines.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.4 -->
+      <div class="risk-card" id="s1-4">
+        <div class="risk-header">
+          <span class="risk-num">1.4</span>
+          <span class="risk-title">Outdated Medical Knowledge &amp; Knowledge Cutoff</span>
+          <span class="risk-tag">Systemic</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Models have static training cutoffs. They may cite retracted studies, apply superseded guidelines, or recommend outdated dosing standards — with real patient harm potential in rapidly evolving therapeutic areas.</p>
+          <div class="example-box">
+            <p>AI warfarin dosing models trained without adequate African-American genetic variant coverage systematically recommend <strong>overdoses</strong> for this population (CYP2C9 allele underrepresentation) — where "outdated knowledge" directly intersects with racial bias, causing pharmacological harm.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R4</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2503.05777" class="paper-title" target="_blank">Medical Hallucination in Foundation Models and Their Impact on Healthcare</a>
+              <p class="paper-desc">Classifies "Outdated Reference Hallucination" as a major hallucination subtype; models relying on obsolete guidelines or retracted literature.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R14</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Safety Challenges of AI in Medicine in the Era of Large Language Models</span>
+              <p class="paper-desc">Multi-institution, 2024 — Jointly published by leading academic institutions; identifies knowledge cutoff as a core safety challenge in rapidly evolving therapeutic areas.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R15</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">MedHalu: Hallucinations in Responses to Healthcare Queries by Large Language Models</span>
+              <p class="paper-desc">Agarwal et al., 2024 — Evaluates hallucination type distribution in real patient health queries; outdated knowledge identified as substantial error contributor.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.5 -->
+      <div class="risk-card" id="s1-5">
+        <div class="risk-header">
+          <span class="risk-num">1.5</span>
+          <span class="risk-title">Over-reliance &amp; The Halo Effect</span>
+          <span class="risk-tag">Behavioral</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Clinicians and patients over-trust AI outputs, suppressing independent judgment. Even when models recommend seeking human consultation, only ~50% of users comply — undermining safety nets.</p>
+          <div class="example-box">
+            <p>A systematic review of LLMs in mental health (*PMC*, 2025) across 55 studies identifies the <strong>"halo effect"</strong> as a primary risk: users systematically overestimate AI accuracy, increasing misdiagnosis and delayed treatment risk. Recommending professional help was followed by only ~half of users.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R16</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12627976/" class="paper-title" target="_blank">"It's Not Only Attention We Need": Systematic Review of LLMs in Mental Health Care</a>
+              <p class="paper-desc">PMC, 2025 — Quantifies halo effect in 55 mental health AI studies; links to delayed treatment-seeking and therapeutic relationship erosion.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R17</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Rapid Integration of LLMs in Healthcare Raises Ethical Concerns: Deceptive Patterns in Social Robots</span>
+              <p class="paper-desc">2024 — Examines trust-formation mechanisms when LLMs are embedded in medical social robots; analyzes automation bias induction patterns.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 2: PRIVACY & SECURITY
+    ═══════════════════════════════════ -->
+    <section class="section s2" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <div class="section-icon">🔒</div>
+        <h2 class="section-title">Privacy &amp; Cybersecurity Risks</h2>
+      </div>
+      <p class="section-core">Medical multimodal models handle highly sensitive patient data, facing end-to-end threats from training-time poisoning to deployment-time adversarial manipulation.</p>
+
+      <!-- 2.1 -->
+      <div class="risk-card" id="s2-1">
+        <div class="risk-header">
+          <span class="risk-num">2.1</span>
+          <span class="risk-title">Patient Data Leakage &amp; Membership Inference Attacks</span>
+          <span class="risk-tag">Privacy</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Models memorize and reproduce patient data from training sets. Membership inference attacks — requiring only black-box API access — can determine whether specific patients' data was used for training, enabling sensitive health inference.</p>
+          <div class="example-box">
+            <p>Models trained on <strong>MIMIC-CXR</strong> have been shown to inadvertently reproduce specific patient image-report pairs via API-only querying — violating HIPAA without any internal model access. The attack is feasible with standard black-box query access to deployed APIs.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R19</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">SoK: Privacy-aware LLM in Healthcare: Threat Model, Privacy Techniques, Challenges and Recommendations</span>
+              <p class="paper-desc">2024 — Systematically maps medical LLM privacy threats (membership inference, model inversion, attribute inference); surveys defensive techniques.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R20</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2502.02438" class="paper-title" target="_blank">Medical Multimodal Model Stealing Attacks via Adversarial Domain Alignment (ADA-Steal)</a>
+              <p class="paper-desc">2025 — First model-stealing attack against medical MLLMs using only natural images; replicates model without any medical data access, raising IP and privacy risks.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R21</span>
+            <div class="paper-content">
+              <a href="https://www.jmir.org/2026/1/e87969" class="paper-title" target="_blank">Data Poisoning Vulnerabilities Across Health Care AI</a>
+              <p class="paper-desc">JMIR, 2026 — Comprehensive threat analysis synthesizing 41 security studies; addresses privacy exposure in federated learning deployments.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.2 -->
+      <div class="risk-card" id="s2-2">
+        <div class="risk-header">
+          <span class="risk-num">2.2</span>
+          <span class="risk-title">Prompt Injection Attacks</span>
+          <span class="risk-tag">Active Threat</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Malicious instructions embedded in DICOM metadata, patient record fields, or report annotations hijack model behavior — redirecting it to leak information or generate dangerous outputs, invisible to clinical staff.</p>
+          <div class="example-box">
+            <p>Researchers embedded attack instructions in <strong>DICOM metadata fields</strong> of a routine chest X-ray. When the oncology VLM processed the image, hidden instructions activated — altering the diagnostic recommendation and transmitting patient names and clinical summaries to an external address. Clinical staff detected nothing anomalous.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R23</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Prompt Injection Attacks on Large Language Models in Oncology</span>
+              <p class="paper-desc">2024 — First systematic clinical prompt injection demonstration; shows attacks via imaging metadata can cause information leakage and diagnostic manipulation.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R24</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Emerging Cyber Attack Risks of Medical AI Agents</span>
+              <p class="paper-desc">2024 — Classifies prompt injection as the highest-severity vector in medical AI agent systems due to invisibility and cascading clinical consequences.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R25</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2508.17215" class="paper-title" target="_blank">How to Make Medical AI Systems Safer? (MedThreatRAG)</a>
+              <p class="paper-desc">2025 — Three-strategy poisoning framework for RAG-augmented medical systems; cross-modal conflict injection disrupts retrieval without model access.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.3 -->
+      <div class="risk-card" id="s2-3">
+        <div class="risk-header">
+          <span class="risk-num">2.3</span>
+          <span class="risk-title">Adversarial Example Attacks on Medical Imaging</span>
+          <span class="risk-tag">Critical</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Imperceptibly perturbed medical images fool AI into producing catastrophically wrong diagnoses — changes invisible to radiologists can reduce detection accuracy from 95% to near zero.</p>
+          <div class="example-box">
+            <p>Finlayson et al. (<em>Science</em>, 2019): Pixel-level perturbations added to chest X-rays caused AI to diagnose pneumonia cases as <strong>normal with high confidence</strong>. Detection accuracy: <strong>95% → ~0%</strong>. Perturbed images were indistinguishable from originals to board-certified radiologists. The paper also modeled realistic adversary motivations (insurance fraud, malpractice cover-up).</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R27</span>
+            <div class="paper-content">
+              <a href="https://www.science.org/doi/10.1126/science.aaz7888" class="paper-title" target="_blank">Adversarial Attacks on Medical Machine Learning</a>
+              <p class="paper-desc">Finlayson et al., Science 2019 — Landmark paper demonstrating medical ML adversarial vulnerability; models realistic attacker motivations in healthcare.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R28</span>
+            <div class="paper-content">
+              <a href="https://www.frontiersin.org/journals/medicine/articles/10.3389/fmed.2025.1606238/full" class="paper-title" target="_blank">Assessing the Adversarial Robustness of Multimodal Medical AI Systems</a>
+              <p class="paper-desc">Frontiers in Medicine, 2025 — Compares single vs. multimodal medical model robustness; multimodal fusion partially improves robustness but introduces new attack surfaces.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R29</span>
+            <div class="paper-content">
+              <a href="https://www.nature.com/articles/s41746-024-01282-7" class="paper-title" target="_blank">Medical LLMs Are Susceptible to Targeted Misinformation Attacks</a>
+              <p class="paper-desc">npj Digital Medicine, 2024 — Modifying 1.1% of model weights stably injects false biomedical facts; errors propagate while other task performance is preserved.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.4 -->
+      <div class="risk-card" id="s2-4">
+        <div class="risk-header">
+          <span class="risk-num">2.4</span>
+          <span class="risk-title">Training Data Poisoning &amp; Backdoor Attacks</span>
+          <span class="risk-tag">Covert</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Attackers embed "backdoor triggers" during training. The deployed model behaves normally on clean inputs but produces attacker-specified outputs when a specific trigger condition is met — enabling silent, targeted medical discrimination.</p>
+          <div class="example-box">
+            <p><em>JMIR</em> (2026) models a technically grounded attack scenario: an adversary poisons an <strong>organ transplant prioritization AI</strong> to systematically lower priority scores for a specific demographic group. Current transplant oversight — monitoring aggregate outcomes, not AI forensics — cannot detect this. The bias becomes statistically visible only after years of disparate transplant outcomes.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R21</span>
+            <div class="paper-content">
+              <a href="https://www.jmir.org/2026/1/e87969" class="paper-title" target="_blank">Data Poisoning Vulnerabilities Across Health Care AI</a>
+              <p class="paper-desc">JMIR, 2026 — Eight technically grounded attack scenarios across healthcare AI architectures; analyzes detectability gaps in current clinical oversight systems.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R24</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Emerging Cyber Attack Risks of Medical AI Agents</span>
+              <p class="paper-desc">2024 — Analyzes backdoor propagation in multi-agent medical systems; a compromised sub-agent can silently spread poisoned outputs through entire clinical workflows.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 3: ALGORITHMIC BIAS
+    ═══════════════════════════════════ -->
+    <section class="section s3" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <div class="section-icon">⚖</div>
+        <h2 class="section-title">Algorithmic Bias &amp; Health Equity</h2>
+      </div>
+      <p class="section-core">Medical multimodal models learn and amplify social biases from historical data, producing systematic diagnostic disparities that harm marginalized populations and deepen healthcare inequality.</p>
+
+      <div class="risk-card" id="s3-1">
+        <div class="risk-header">
+          <span class="risk-num">3.1</span>
+          <span class="risk-title">Racial &amp; Skin Tone Bias</span>
+          <span class="risk-tag">Structural</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Training data severely underrepresents dark skin tones; models perform substantially worse for dermatological and pathological imaging tasks on darker-skinned patients, causing missed cancers and diagnostic delays.</p>
+          <div class="example-box">
+            <p>Oxford researchers (*Lancet Digital Health*) examined <strong>21 open-access skin cancer AI datasets</strong> (106,950 images total). Only 2,436 recorded skin type. Among those: <strong>10 images</strong> with brown skin, <strong>1 image</strong> with dark/black skin. Experts warned this means widely deployed AI "may cause avoidable surgery, missed treatable cancers, and unnecessary anxiety" for patients with dark skin.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R31</span>
+            <div class="paper-content">
+              <a href="https://www.science.org/doi/10.1126/sciadv.adq0305" class="paper-title" target="_blank">Demographic Bias of Expert-Level Vision-Language Foundation Models in Medical Imaging</a>
+              <p class="paper-desc">Science Advances, 2024 — Expert-level medical VLMs show consistent underdiagnosis bias for Black patients vs. certified radiologists on chest X-ray datasets.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R33</span>
+            <div class="paper-content">
+              <a href="https://www.nature.com/articles/s41591-021-01595-0" class="paper-title" target="_blank">Underdiagnosis Bias of AI Algorithms Applied to Chest Radiographs in Underserved Patient Populations</a>
+              <p class="paper-desc">Seyyed-Kalantari et al., Nature Medicine 2021 — Benchmark across three chest X-ray datasets; highest underdiagnosis for intersectional groups (Hispanic female patients).</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R42</span>
+            <div class="paper-content">
+              <a href="https://www.nature.com/articles/s41746-025-01503-7" class="paper-title" target="_blank">Bias Recognition and Mitigation Strategies in AI Healthcare Applications</a>
+              <p class="paper-desc">npj Digital Medicine, 2025 — Systematic review of bias sources and their propagation across the full medical AI lifecycle; mitigation strategy catalog.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s3-2">
+        <div class="risk-header">
+          <span class="risk-num">3.2</span>
+          <span class="risk-title">Gender &amp; Physiological Bias</span>
+          <span class="risk-tag">Structural</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Historical medical data is male-dominated. Models underperform on female-specific symptom presentations and may reproduce historically discriminatory clinical practices in their recommendations.</p>
+          <div class="example-box">
+            <p>U.S. Senator Ben Ray Luján cited congressional testimony: medical AI trained predominantly on male data performed substantially worse on female patients. A 2024 UK government-commissioned review (<em>Equity in Medical Devices</em>) found women, minority ethnic groups, and people from deprived communities systematically receive lower-quality care from biased medical AI tools.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R34</span>
+            <div class="paper-content">
+              <a href="https://www.jclinepi.com/article/S0895-4356(24)00362-7/fulltext" class="paper-title" target="_blank">Sociodemographic Bias in Clinical Machine Learning Models: A Scoping Review</a>
+              <p class="paper-desc">Journal of Clinical Epidemiology, 2024 — Gender bias identified as one of the most pervasive bias types across clinical ML domains.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R36</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8515002/" class="paper-title" target="_blank">Addressing Bias in Big Data and AI for Health Care: A Call for Open Science</a>
+              <p class="paper-desc">PMC, 2021 — Documents systematic LGBTQ+ data absence in EHR systems; AI is blind to health disparities affecting this population.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s3-3">
+        <div class="risk-header">
+          <span class="risk-num">3.3</span>
+          <span class="risk-title">Geographic &amp; Resource Inequality Bias</span>
+          <span class="risk-tag">Global</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Medical AI training data originates predominantly from high-income urban hospitals. Models fail to generalize to low-resource settings, rural environments, or different equipment standards — amplifying global health disparities.</p>
+          <div class="example-box">
+            <p>A 2024 mixed-methods study found that <strong>over 90% of medical AI fairness research</strong> focuses on Western contexts. African nations face a dual disadvantage: inadequate local data representation and colonial-legacy infrastructure disparities — making Western-trained AI systems systematically unreliable in these settings, largely invisible in mainstream AI safety discourse.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R37</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">The Case for Globalizing Fairness: A Mixed Methods Study on Colonialism, AI, and Health in Africa</span>
+              <p class="paper-desc">2024 — Applies postcolonial theory to medical AI fairness; reveals how colonial power structures translate into current data representation failures.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R35</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12325396/" class="paper-title" target="_blank">Algorithmic Bias in Public Health AI: A Silent Threat to Equity in Low-resource Settings</a>
+              <p class="paper-desc">Frontiers in Public Health, 2025 — Multi-stage analysis of bias sources in low-resource medical settings; setting-specific mitigation strategies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s3-4">
+        <div class="risk-header">
+          <span class="risk-num">3.4</span>
+          <span class="risk-title">Proxy Variable Bias &amp; Amplified Historical Discrimination</span>
+          <span class="risk-tag">Covert</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Removing protected attributes (race, gender) from training data is insufficient — models exploit correlated proxies (zip code, insurance type, historical cost) to reconstruct and amplify historical discrimination patterns.</p>
+          <div class="example-box">
+            <p>Obermeyer et al. (<em>Science</em>, 2019): A widely deployed U.S. health management algorithm used <strong>"historical healthcare costs" as a proxy for medical need</strong>. Since Black patients historically received less care (due to systemic inequality), they were assigned lower health risk scores than equally sick white patients — at scale across millions of patients, with no explicit racial data in the algorithm.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R39</span>
+            <div class="paper-content">
+              <a href="https://www.science.org/doi/10.1126/science.aax2342" class="paper-title" target="_blank">Dissecting Racial Bias in an Algorithm Used to Manage the Health of Populations</a>
+              <p class="paper-desc">Obermeyer et al., Science 2019 — Landmark empirical demonstration of proxy variable bias operating invisibly through cost-based health algorithms; foundational paper for the medical AI fairness field.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R40</span>
+            <div class="paper-content">
+              <a href="https://www.bu.edu/deerfield/2024/04/14/stone2-2/" class="paper-title" target="_blank">AI in Healthcare: Counteracting Algorithmic Bias</a>
+              <p class="paper-desc">Boston University, 2024 — Explains why removing sensitive attributes fails; bias mitigation must address societal conditions producing biased data.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R41</span>
+            <div class="paper-content">
+              <a href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2812289" class="paper-title" target="_blank">Guiding Principles to Address the Impact of Algorithm Bias on Racial and Ethnic Disparities</a>
+              <p class="paper-desc">JAMA Network Open, 2023 — Governance principles framework for proxy variable bias through the full algorithm lifecycle: design, validation, and monitoring.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 4: MULTIMODAL-SPECIFIC
+    ═══════════════════════════════════ -->
+    <section class="section s4" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <div class="section-icon">⚡</div>
+        <h2 class="section-title">Multimodal-Specific Adversarial &amp; Reasoning Safety</h2>
+      </div>
+      <p class="section-core">Multimodal architectures introduce unique attack surfaces absent in unimodal systems — visual modalities can bypass text safety alignment, and benign input combinations can trigger dangerous reasoning chains.</p>
+
+      <div class="risk-card" id="s4-1">
+        <div class="risk-header">
+          <span class="risk-num">4.1</span>
+          <span class="risk-title">Cross-Modality Jailbreak Attacks</span>
+          <span class="risk-tag">Novel Vector</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Harmful instructions are encoded within medical images (X-rays, dermoscopy images) — not text — bypassing text-only safety alignment to elicit refused dangerous outputs: lethal drug doses, prohibited procedures.</p>
+          <div class="example-box">
+            <p><strong>3MAD dataset + MCM attack</strong> (Huang et al., 2024): Multimodal Cross-optimization simultaneously adversarializes image perturbations and text tokens. Attack Success Rate far exceeds pure-text or pure-image jailbreaks. Medical models' text safety guardrails are rendered nearly ineffective when the visual modality is weaponized — a fundamental architecture vulnerability.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R43</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2405.20775" class="paper-title" target="_blank">Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks on Medical Multimodal LLMs</a>
+              <p class="paper-desc">Huang et al., 2024 — First systematic cross-modality jailbreak against medical MLLMs; introduces 3MAD attack dataset and MCM optimization algorithm.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R44</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2306.13213" class="paper-title" target="_blank">Visual Adversarial Examples Jailbreak Aligned Large Language Models</a>
+              <p class="paper-desc">Qi et al., AAAI 2024 — Establishes visual modality as an effective safety-bypass vector; theoretical and empirical foundation for medical cross-modal jailbreak research.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R45</span>
+            <div class="paper-content">
+              <a href="https://aclanthology.org/2025.acl-long.74.pdf" class="paper-title" target="_blank">Jailbreak Large Vision-Language Models Through Multi-Modal Linkage (MML)</a>
+              <p class="paper-desc">ACL 2025 — Visual-textual linkage attacks achieve high success rates without exposing obviously malicious content; stealthy enough to evade manual review.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R26</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2512.08185" class="paper-title" target="_blank">A Practical Framework for Evaluating Medical AI Security</a>
+              <p class="paper-desc">2024 — Classifies cross-modality jailbreaks as the highest-severity medical AI vulnerability; proposes standardized red-team evaluation protocols.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s4-2">
+        <div class="risk-header">
+          <span class="risk-num">4.2</span>
+          <span class="risk-title">Mismatched Input Attacks</span>
+          <span class="risk-tag">Clinical Risk</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Image-text mismatches — whether intentional or from EHR errors and image misfiling — exploit cross-modal reasoning failures, causing models to generate hallucinated pathology "confirming" textual expectations rather than image reality.</p>
+          <div class="example-box">
+            <p>A <strong>healthy lung X-ray + "patient suspected of lung cancer, awaiting imaging confirmation"</strong> text causes multiple medical models to fabricate nodule descriptions confirming the text's expectation — directly contradicting the image. In real deployment, EHR system errors or archive misidentification could inadvertently trigger this exact scenario.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R43</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2405.20775" class="paper-title" target="_blank">Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks</a>
+              <p class="paper-desc">Huang et al., 2024 — Simultaneously defines mismatched attacks; models realistic clinical error scenarios (wrong image-patient pairing) as inadvertent attack vectors.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R3</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2406.06007" class="paper-title" target="_blank">CARES: A Comprehensive Benchmark of Trustworthiness in Medical VLMs</a>
+              <p class="paper-desc">Xia et al., NeurIPS 2024 — Robustness dimension includes cross-modal consistency testing; systematically quantifies Med-VLM failure under mismatched inputs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s4-3">
+        <div class="risk-header">
+          <span class="risk-num">4.3</span>
+          <span class="risk-title">Implicit Reasoning Safety Risks</span>
+          <span class="risk-tag">Emergent</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Combinations of individually benign inputs trigger dangerous reasoning chains — a blood panel image + pharmacology question may reason into an overdose guide. Single-input safety filters cannot detect this.</p>
+          <div class="example-box">
+            <p><em>Safe Semantics, Unsafe Interpretations</em>: A patient's blood panel image (benign) combined with an academic question about a drug mechanism (benign text) leads the model's chain-of-thought to generate <strong>specific toxic dose guidance</strong>. Neither input alone triggers any content filter — a fundamental blind spot in current safety architectures.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R46</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Safe Semantics, Unsafe Interpretations: Tackling Implicit Reasoning Safety in Large Vision-Language Models</span>
+              <p class="paper-desc">2024 — First formal introduction of "implicit reasoning safety"; constructs benign-input-combination attack paradigm with medical case studies.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R47</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2307.04218" class="paper-title" target="_blank">Jailbreak in Pieces: Compositional Adversarial Attacks on Multi-Modal Language Models</a>
+              <p class="paper-desc">Shayegani et al., 2024 — Splits harmful content across modalities for in-context model reassembly; directly operationalizes implicit reasoning risk.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s4-4">
+        <div class="risk-header">
+          <span class="risk-num">4.4</span>
+          <span class="risk-title">Knowledge Base Poisoning in Medical RAG Systems</span>
+          <span class="risk-tag">Infrastructure</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">RAG-augmented medical systems depend on external knowledge bases for accuracy. A single adversarial injection into a semi-open knowledge base can persistently corrupt model outputs without any direct model access.</p>
+          <div class="example-box">
+            <p><strong>MedThreatRAG (2025)</strong>: In a simulated hospital knowledge base environment, a single malicious injection — a pleural effusion chest X-ray labeled "normal" — causes the RAG system to consistently retrieve and apply this incorrect mapping for all subsequent related queries. The attacker never touches model weights or parameters; the knowledge base is the attack surface.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R25</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2508.17215" class="paper-title" target="_blank">How to Make Medical AI Systems Safer? (MedThreatRAG)</a>
+              <p class="paper-desc">2025 — First systematic poisoning framework for multimodal medical RAG; three attack strategies; single-injection impact quantification.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R48</span>
+            <div class="paper-content">
+              <a href="https://arxiv.org/abs/2410.05524" class="paper-title" target="_blank">RULE: Reliable Multimodal RAG for Factuality in Medical Vision Language Models</a>
+              <p class="paper-desc">Xia et al., EMNLP 2024 — Defense-side RAG reliability improvement; implicitly reveals the security-reliability tradeoff in retrieval-augmented medical AI.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 5: ETHICS & LIABILITY
+    ═══════════════════════════════════ -->
+    <section class="section s5" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <div class="section-icon">⚖</div>
+        <h2 class="section-title">Ethics &amp; Liability Risks</h2>
+      </div>
+      <p class="section-core">Medical multimodal AI introduces fundamental ethical and legal conflicts around informed consent, liability, transparency, and deceptive design — existing frameworks cannot adequately address these.</p>
+
+      <div class="risk-card" id="s5-1">
+        <div class="risk-header">
+          <span class="risk-num">5.1</span>
+          <span class="risk-title">Ambiguous Liability &amp; Accountability Vacuums</span>
+          <span class="risk-tag">Legal</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">When AI-assisted diagnosis causes patient harm, no clear legal or ethical framework determines responsibility among the clinician, hospital, AI developer, and regulator — creating accountability vacuums that undermine trust and safety incentives.</p>
+          <div class="example-box">
+            <p>A radiologist follows an AI's "low suspicion" output and defers a biopsy; the patient is later diagnosed with early-stage cancer. Three simultaneous unresolved questions: Did the physician adequately <em>supervise</em> the AI? Does the developer's performance specification constitute a <em>medical recommendation</em>? Is the hospital liable for deploying AI without adequate <em>staff training</em>? — All three parties may escape full accountability under current law.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R49</span>
+            <div class="paper-content">
+              <a href="https://royalsocietypublishing.org/rsos/article/12/5/241873/" class="paper-title" target="_blank">Ethical and Legal Considerations in Healthcare AI: Innovation and Policy for Safe and Fair Use</a>
+              <p class="paper-desc">Royal Society Open Science, 2025 — Comprehensive analysis of the accountability gap; redefining legal and professional norms for hybrid human-AI decision-making.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R51</span>
+            <div class="paper-content">
+              <a href="https://www.who.int/publications/i/item/9789240084759" class="paper-title" target="_blank">Ethics and Governance of AI for Health: Guidance on Large Multi-modal Models</a>
+              <p class="paper-desc">WHO, 2024 — First WHO guidance dedicated to medical LMMs; 40+ governance recommendations with accountability as a core governance principle.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R52</span>
+            <div class="paper-content">
+              <a href="https://www.tandfonline.com/doi/full/10.1080/20502877.2025.2482282" class="paper-title" target="_blank">Towards Accountable, Legitimate and Trustworthy AI in Healthcare: Effective Data Stewardship</a>
+              <p class="paper-desc">Body &amp; Society, 2025 — Proposes data stewardship as an institutional accountability mechanism; examines operationalizability in medical AI contexts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s5-2">
+        <div class="risk-header">
+          <span class="risk-num">5.2</span>
+          <span class="risk-title">Black-box Opacity &amp; Lack of Explainability</span>
+          <span class="risk-tag">Structural</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Foundation model decisions are opaque to clinicians and patients. Physicians cannot challenge AI outputs meaningfully, nor explain AI-assisted decisions — undermining informed medical practice and the therapeutic relationship.</p>
+          <div class="example-box">
+            <p>Qualitative study of healthcare professionals (Yoo et al., 2023): Clinicians' primary concern about medical AI is not its accuracy — it is the <strong>inability to understand its reasoning</strong>. When AI and clinical judgment conflict, physicians cannot validate either; they face a choice between two black boxes. This is the primary barrier to appropriate trust calibration.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R51</span>
+            <div class="paper-content">
+              <a href="https://www.who.int/publications/i/item/9789240084759" class="paper-title" target="_blank">Ethics and Governance of AI for Health</a>
+              <p class="paper-desc">WHO, 2024 — Positions "intelligibility" as a foundational governance principle; establishes explainability as a prerequisite for patient autonomy protection.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R50</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11977975/" class="paper-title" target="_blank">Ethical Challenges and Evolving Strategies in the Integration of AI into Clinical Practice</a>
+              <p class="paper-desc">PLOS Digital Health, 2025 — Identifies transparency as the most practically challenging ethical dimension; proposes pharmacovigilance-inspired continuous AI transparency auditing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s5-3">
+        <div class="risk-header">
+          <span class="risk-num">5.3</span>
+          <span class="risk-title">Informed Consent &amp; Patient Autonomy</span>
+          <span class="risk-tag">Rights</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Patients are largely unaware of AI involvement in their diagnoses, the provenance of training data (potentially including their own records), or AI-specific limitations — making genuine informed consent structurally impossible under current practices.</p>
+          <div class="example-box">
+            <p>An NHS survey (2024): <strong>over 70% of patients</strong> did not know AI was being used to analyze their imaging studies. When informed, many expressed they would have withheld consent if they knew their data was used for commercial AI training — a direct contradiction with existing "implied consent" data practices in many healthcare systems globally.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R49</span>
+            <div class="paper-content">
+              <a href="https://royalsocietypublishing.org/rsos/article/12/5/241873/" class="paper-title" target="_blank">Ethical and Legal Considerations in Healthcare AI</a>
+              <p class="paper-desc">Royal Society Open Science, 2025 — Redefines informed consent for the AI era; analyzes dynamic consent as an alternative to one-time authorization.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R52</span>
+            <div class="paper-content">
+              <a href="https://www.tandfonline.com/doi/full/10.1080/20502877.2025.2482282" class="paper-title" target="_blank">Towards Accountable AI in Healthcare: Data Stewardship</a>
+              <p class="paper-desc">Body &amp; Society, 2025 — Reframes consent as continuous participation rather than one-time authorization; proposes stewardship institutions as mediators.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s5-4">
+        <div class="risk-header">
+          <span class="risk-num">5.4</span>
+          <span class="risk-title">Deceptive Design &amp; Anthropomorphization</span>
+          <span class="risk-tag">Behavioral</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Medical AI embedded in chatbots and social robots deliberately blurs the AI/human boundary using emotional language and persuasive design — creating false trust that overrides patient judgment and obscures system limitations.</p>
+          <div class="example-box">
+            <p>Analysis of commercial medical AI assistant products (2024) found systematic <strong>deceptive design patterns</strong>: interfaces obscuring the AI/human boundary, emotional language ("I'm deeply concerned about your symptoms") creating false empathy, and "stabilizing" scripts deployed to prevent dissatisfied patients from seeking second opinions — rather than honestly acknowledging AI limitations.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R17</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Rapid Integration of LLMs in Healthcare Raises Ethical Concerns: Deceptive Patterns in Social Robots</span>
+              <p class="paper-desc">2024 — First systematic taxonomy of deceptive design patterns in medical AI social robots; examines conflicts with medical ethics norms.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R51</span>
+            <div class="paper-content">
+              <a href="https://www.who.int/publications/i/item/9789240084759" class="paper-title" target="_blank">Ethics and Governance of AI for Health</a>
+              <p class="paper-desc">WHO, 2024 — Mandates clear AI identity disclosure as a core governance requirement; frames anti-deception as essential to maintaining healthcare system trust.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 6: SOCIOECONOMIC
+    ═══════════════════════════════════ -->
+    <section class="section s6" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <div class="section-icon">🌐</div>
+        <h2 class="section-title">Socioeconomic Impact Risks</h2>
+      </div>
+      <p class="section-core">Medical multimodal AI deployment is not only a technical question but a profound distributive one — reshaping healthcare access, transforming the medical workforce, enabling new forms of data extraction, and embedding commercial logic into clinical decisions.</p>
+
+      <div class="risk-card" id="s6-1">
+        <div class="risk-header">
+          <span class="risk-num">6.1</span>
+          <span class="risk-title">Technology-Driven Healthcare Resource Gaps</span>
+          <span class="risk-tag">Systemic</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">State-of-the-art medical AI deploys first at well-resourced elite institutions, creating a paradox: populations most harmed by algorithmic bias are served by institutions with least AI access.</p>
+          <div class="example-box">
+            <p>As of 2024, <strong>over 75% of FDA-cleared medical AI algorithms</strong> are deployed at the top 20% of large U.S. healthcare institutions. Community hospitals serving majority minority and low-income populations remain largely outside the AI deployment wave — structurally compounding existing healthcare inequality rather than alleviating it.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R37</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">The Case for Globalizing Fairness: Colonialism, AI, and Health in Africa</span>
+              <p class="paper-desc">2024 — Political-economy analysis of how high-income-country AI ecosystems reproduce and deepen historical health inequalities globally.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R51</span>
+            <div class="paper-content">
+              <a href="https://www.who.int/publications/i/item/9789240084759" class="paper-title" target="_blank">Ethics and Governance of AI for Health</a>
+              <p class="paper-desc">WHO, 2024 — Positions accessibility and affordability as core equitable deployment principles; proposes international coordination mechanisms for low-income country access.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s6-2">
+        <div class="risk-header">
+          <span class="risk-num">6.2</span>
+          <span class="risk-title">Healthcare Workforce Disruption &amp; Skill Degradation</span>
+          <span class="risk-tag">Long-term</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Medical AI rapidly reaches expert-level performance in imaging-intensive specialties, restructuring training pipelines and eroding foundational clinical skills — with long-term patient safety implications for the next generation of clinicians.</p>
+          <div class="example-box">
+            <p>U.S. radiology residency programs have begun reducing high-volume repetitive reading rotations as AI takes over these cases. Paradoxically, this <strong>reduces the clinical experience trainees need to effectively supervise AI</strong> in complex edge cases — a structural skill-degradation loop where AI adoption creates the very supervisory capability deficit it requires to be safe.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R14</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">Safety Challenges of AI in Medicine in the Era of LLMs</span>
+              <p class="paper-desc">Multi-institution, 2024 — Discusses AI's systemic impact on medical professional identity and training; long-term patient safety implications of reduced foundational skill development.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R50</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11977975/" class="paper-title" target="_blank">Ethical Challenges and Evolving Strategies in AI-Clinical Practice Integration</a>
+              <p class="paper-desc">PLOS Digital Health, 2025 — Addresses transformation of clinician roles to "AI supervisors"; analyzes new training requirements and competency framework changes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s6-3">
+        <div class="risk-header">
+          <span class="risk-num">6.3</span>
+          <span class="risk-title">Data Colonialism &amp; Intellectual Property Inequality</span>
+          <span class="risk-tag">Global Justice</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Large tech companies collect patient data from low-income countries under "global health progress" framing, train commercial AI, and sell products at prices those contributing institutions cannot afford — a new form of knowledge dispossession.</p>
+          <div class="example-box">
+            <p>Multiple African nations have documented cases where hospital imaging data was incorporated into global medical AI databases (diabetic retinopathy, tuberculosis detection), used to train commercial products now <strong>licensed at prices completely beyond the economic capacity of the contributing hospitals</strong> — making data contributors systematically excluded from the technology they enabled.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R37</span>
+            <div class="paper-content">
+              <span class="paper-title no-link">The Case for Globalizing Fairness: Colonialism, AI, and Health in Africa</span>
+              <p class="paper-desc">2024 — Introduces data colonialism framing; reveals power asymmetries in data ownership and technology access through mixed-methods African case studies.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R36</span>
+            <div class="paper-content">
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8515002/" class="paper-title" target="_blank">Addressing Bias in Big Data and AI for Health Care: A Call for Open Science</a>
+              <p class="paper-desc">PMC, 2021 — Proposes open science as a counter to data colonialism; advocates globally equitable data co-ownership preserving data sovereignty.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card" id="s6-4">
+        <div class="risk-header">
+          <span class="risk-num">6.4</span>
+          <span class="risk-title">Healthcare Commercialization &amp; Conflicts of Interest</span>
+          <span class="risk-tag">Structural</span>
+        </div>
+        <div class="risk-body">
+          <p class="risk-desc">Commercial AI optimization logic conflicts with medical ethics logic. Motivated actors (insurers, pharma companies, competitors) have strong financial incentives to manipulate medical AI systems — making these attacks more persistent and harder to detect than random malicious attacks.</p>
+          <div class="example-box">
+            <p><em>JMIR</em> (2026) explicitly models realistic commercial adversaries: <strong>insurers</strong> incentivized to train AI toward "low-risk" diagnoses to reduce claim payouts; <strong>pharmaceutical companies</strong> who may exploit prescribing AI to favor proprietary medications. These attacks are commercially motivated to remain invisible — and existing oversight systems have no mechanisms to detect them.</p>
+          </div>
+          <div class="papers-label">Key Literature</div>
+          <div class="paper-item">
+            <span class="paper-ref">R21</span>
+            <div class="paper-content">
+              <a href="https://www.jmir.org/2026/1/e87969" class="paper-title" target="_blank">Data Poisoning Vulnerabilities Across Health Care AI</a>
+              <p class="paper-desc">JMIR, 2026 — Models insurance companies, pharma firms, and competitors as medical AI adversaries; integrates commercial conflict of interest into the security threat framework.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R39</span>
+            <div class="paper-content">
+              <a href="https://www.science.org/doi/10.1126/science.aax2342" class="paper-title" target="_blank">Dissecting Racial Bias in an Algorithm Used to Manage the Health of Populations</a>
+              <p class="paper-desc">Obermeyer et al., Science 2019 — Canonical case of commercial optimization logic (cost-as-proxy-for-need) producing systematic racial discrimination at scale.</p>
+            </div>
+          </div>
+          <div class="paper-item">
+            <span class="paper-ref">R54</span>
+            <div class="paper-content">
+              <a href="https://acr-journal.com/article/the-intersection-of-law-ethics-and-healthcare-ai-policy-pathways-for-responsible-innovation-1695/" class="paper-title" target="_blank">The Intersection of Law, Ethics, and Healthcare AI: Policy Pathways for Responsible Innovation</a>
+              <p class="paper-desc">Advances in Consumer Research, 2025 — Analyzes how EU AI Act, FDA framework, and WHO guidelines are classifying commercial medical AI under mandatory high-risk oversight regimes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUMMARY TABLE -->
+    <div class="summary-section">
+      <h2 class="summary-title">Risk Overview</h2>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Key Sub-risks</th>
+            <th>Primary Harm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cat-badge"><span class="cat-dot" style="background:var(--cat1)"></span>Clinical Safety</span></td>
+            <td>Hallucination, unreliable decision support, cross-modal misread, outdated knowledge, over-reliance</td>
+            <td>Misdiagnosis, delayed treatment, patient injury</td>
+          </tr>
+          <tr>
+            <td><span class="cat-badge"><span class="cat-dot" style="background:var(--cat2)"></span>Privacy &amp; Security</span></td>
+            <td>Data leakage, prompt injection, adversarial examples, backdoor attacks</td>
+            <td>Patient privacy violation, system manipulation</td>
+          </tr>
+          <tr>
+            <td><span class="cat-badge"><span class="cat-dot" style="background:var(--cat3)"></span>Algorithmic Bias</span></td>
+            <td>Racial bias, gender bias, geographic inequality, proxy variable bias</td>
+            <td>Systematic underdiagnosis in marginalized groups</td>
+          </tr>
+          <tr>
+            <td><span class="cat-badge"><span class="cat-dot" style="background:var(--cat4)"></span>Multimodal-Specific</span></td>
+            <td>Cross-modal jailbreak, mismatched attacks, implicit reasoning, RAG poisoning</td>
+            <td>Safety guardrail failure, dangerous content generation</td>
+          </tr>
+          <tr>
+            <td><span class="cat-badge"><span class="cat-dot" style="background:var(--cat5)"></span>Ethics &amp; Liability</span></td>
+            <td>Accountability vacuum, black-box opacity, consent, deceptive design</td>
+            <td>Legal gray zones, patient autonomy erosion</td>
+          </tr>
+          <tr>
+            <td><span class="cat-badge"><span class="cat-dot" style="background:var(--cat6)"></span>Socioeconomic</span></td>
+            <td>Technology gap, workforce disruption, data colonialism, commercial conflict</td>
+            <td>Health inequality amplification, systemic exploitation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- REFERENCES -->
+    <div class="ref-section" id="references">
+      <h2 class="ref-title">References</h2>
+      <p class="ref-subtitle">All cited papers — click titles to access the source where available.</p>
+
+      <div class="ref-group">
+        <div class="ref-group-title">Clinical Safety</div>
+        <div class="ref-entry"><span class="ref-id">[R1]</span><span class="ref-text">Gu et al. (2024). MedVH: Toward Systematic Evaluation of Hallucination for Large Vision Language Models in the Medical Context. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12363988/" class="ref-link" target="_blank">PMC →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R2]</span><span class="ref-text">Zhu et al. (ACL 2025). Can We Trust AI Doctors? A Survey of Medical Hallucination in LLMs and LVLMs. <a href="https://github.com/Zhihong-Zhu/Medical_Hallucination_Survey" class="ref-link" target="_blank">GitHub →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R3]</span><span class="ref-text">Xia et al. (NeurIPS 2024). CARES: A Comprehensive Benchmark of Trustworthiness in Medical Vision Language Models. <a href="https://arxiv.org/abs/2406.06007" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R4]</span><span class="ref-text">Survey (2025). Medical Hallucination in Foundation Models and Their Impact on Healthcare. <a href="https://arxiv.org/abs/2503.05777" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R5]</span><span class="ref-text">Wu et al. (ICLR 2024). Hallucination Benchmark in Medical Visual Question Answering. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R6]</span><span class="ref-text">Omar et al. (2025). Multi-model Assurance Analysis: LLMs Vulnerable to Adversarial Hallucination During Clinical Decision Support. <a href="https://www.nature.com/articles/s43856-025-01021-3" class="ref-link" target="_blank">Communications Medicine →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R7]</span><span class="ref-text">Bedi et al. (2024). GPT-4V(ision) Unsuitable for Clinical Care and Education. npj Digital Medicine.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R8]</span><span class="ref-text">(2024). First, Do NOHARM: Towards Clinically Safe Large Language Models. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R9]</span><span class="ref-text">(2025). A Framework to Assess Clinical Safety and Hallucination Rates of LLMs for Medical Text Summarisation. <a href="https://www.nature.com/articles/s41746-025-01670-7" class="ref-link" target="_blank">npj Digital Medicine →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R10]</span><span class="ref-text">(2024). MediConfusion: Can You Trust Your AI Radiologist? Probing the Reliability of Multimodal Medical Foundation Models. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R11]</span><span class="ref-text">Nan et al. (2024). Beyond the Hype: A Dispassionate Look at Vision-Language Models in Medical Scenarios. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R12]</span><span class="ref-text">Yan et al. (2024). An Embarrassingly Simple Probing Evaluation of Large Multimodal Models in Medical VQA. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R13]</span><span class="ref-text">Chen et al. (2023). Detecting and Evaluating Medical Hallucinations in Large Vision Language Models. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R14]</span><span class="ref-text">Multi-institution (2024). Safety Challenges of AI in Medicine in the Era of Large Language Models. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R15]</span><span class="ref-text">Agarwal et al. (2024). MedHalu: Hallucinations in Responses to Healthcare Queries by LLMs. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R16]</span><span class="ref-text">(2025). "It's Not Only Attention We Need": Systematic Review of LLMs in Mental Health Care. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12627976/" class="ref-link" target="_blank">PMC →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R17]</span><span class="ref-text">(2024). Rapid Integration of LLMs in Healthcare Raises Ethical Concerns: Deceptive Patterns in Social Robots. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R18]</span><span class="ref-text">(2024). Towards Safe AI Clinicians: A Comprehensive Study on LLM Jailbreaking in Healthcare. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R53]</span><span class="ref-text">Roustan &amp; Bastardot (IJMR, 2025). The Clinicians' Guide to LLMs: A General Perspective With a Focus on Hallucinations. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11815294/" class="ref-link" target="_blank">PMC →</a></span></div>
+      </div>
+
+      <div class="ref-group">
+        <div class="ref-group-title">Privacy &amp; Cybersecurity</div>
+        <div class="ref-entry"><span class="ref-id">[R19]</span><span class="ref-text">(2024). SoK: Privacy-aware LLM in Healthcare: Threat Model, Privacy Techniques, Challenges and Recommendations. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R20]</span><span class="ref-text">(2025). Medical Multimodal Model Stealing Attacks via Adversarial Domain Alignment (ADA-Steal). <a href="https://arxiv.org/abs/2502.02438" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R21]</span><span class="ref-text">(JMIR, 2026). Data Poisoning Vulnerabilities Across Health Care Artificial Intelligence. <a href="https://www.jmir.org/2026/1/e87969" class="ref-link" target="_blank">JMIR →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R22]</span><span class="ref-text">(AI Review, 2024). Robustness in Deep Learning Models for Medical Diagnostics: Security and Adversarial Challenges. <a href="https://link.springer.com/article/10.1007/s10462-024-11005-9" class="ref-link" target="_blank">Springer →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R23]</span><span class="ref-text">(2024). Prompt Injection Attacks on Large Language Models in Oncology. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R24]</span><span class="ref-text">(2024). Emerging Cyber Attack Risks of Medical AI Agents. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R25]</span><span class="ref-text">(2025). How to Make Medical AI Systems Safer? (MedThreatRAG). <a href="https://arxiv.org/abs/2508.17215" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R26]</span><span class="ref-text">(2024). A Practical Framework for Evaluating Medical AI Security. <a href="https://arxiv.org/abs/2512.08185" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R27]</span><span class="ref-text">Finlayson et al. (Science, 2019). Adversarial Attacks on Medical Machine Learning. <a href="https://www.science.org/doi/10.1126/science.aaz7888" class="ref-link" target="_blank">Science →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R28]</span><span class="ref-text">(Frontiers in Medicine, 2025). Assessing the Adversarial Robustness of Multimodal Medical AI Systems. <a href="https://www.frontiersin.org/journals/medicine/articles/10.3389/fmed.2025.1606238/full" class="ref-link" target="_blank">Frontiers →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R29]</span><span class="ref-text">(npj Digital Medicine, 2024). Medical LLMs Are Susceptible to Targeted Misinformation Attacks. <a href="https://www.nature.com/articles/s41746-024-01282-7" class="ref-link" target="_blank">Nature →</a></span></div>
+      </div>
+
+      <div class="ref-group">
+        <div class="ref-group-title">Algorithmic Bias &amp; Health Equity</div>
+        <div class="ref-entry"><span class="ref-id">[R30]</span><span class="ref-text">(2024). Are Generative Models Fair? A Study of Racial Bias in Dermatological Image Generation. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R31]</span><span class="ref-text">(Science Advances, 2024). Demographic Bias of Expert-Level Vision-Language Foundation Models in Medical Imaging. <a href="https://www.science.org/doi/10.1126/sciadv.adq0305" class="ref-link" target="_blank">Science Advances →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R32]</span><span class="ref-text">(2024). Unmasking and Quantifying Racial Bias of LLMs in Medical Report Generation. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R33]</span><span class="ref-text">Seyyed-Kalantari et al. (Nature Medicine, 2021). Underdiagnosis Bias of AI Algorithms Applied to Chest Radiographs in Underserved Patient Populations. <a href="https://www.nature.com/articles/s41591-021-01595-0" class="ref-link" target="_blank">Nature Medicine →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R34]</span><span class="ref-text">(JCE, 2024). Sociodemographic Bias in Clinical Machine Learning Models: A Scoping Review. <a href="https://www.jclinepi.com/article/S0895-4356(24)00362-7/fulltext" class="ref-link" target="_blank">JCE →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R35]</span><span class="ref-text">(Frontiers, 2025). Algorithmic Bias in Public Health AI: A Silent Threat to Equity in Low-resource Settings. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12325396/" class="ref-link" target="_blank">PMC →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R36]</span><span class="ref-text">(PMC, 2021). Addressing Bias in Big Data and AI for Health Care: A Call for Open Science. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8515002/" class="ref-link" target="_blank">PMC →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R37]</span><span class="ref-text">(2024). The Case for Globalizing Fairness: A Mixed Methods Study on Colonialism, AI, and Health in Africa. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R38]</span><span class="ref-text">(2024). AI-Driven Healthcare: A Review on Ensuring Fairness and Mitigating Bias. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R39]</span><span class="ref-text">Obermeyer et al. (Science, 2019). Dissecting Racial Bias in an Algorithm Used to Manage the Health of Populations. <a href="https://www.science.org/doi/10.1126/science.aax2342" class="ref-link" target="_blank">Science →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R40]</span><span class="ref-text">(Boston University, 2024). AI in Healthcare: Counteracting Algorithmic Bias. <a href="https://www.bu.edu/deerfield/2024/04/14/stone2-2/" class="ref-link" target="_blank">BU Deerfield →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R41]</span><span class="ref-text">(JAMA Network Open, 2023). Guiding Principles to Address the Impact of Algorithm Bias on Racial and Ethnic Disparities. <a href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2812289" class="ref-link" target="_blank">JAMA →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R42]</span><span class="ref-text">(npj Digital Medicine, 2025). Bias Recognition and Mitigation Strategies in AI Healthcare Applications. <a href="https://www.nature.com/articles/s41746-025-01503-7" class="ref-link" target="_blank">Nature →</a></span></div>
+      </div>
+
+      <div class="ref-group">
+        <div class="ref-group-title">Multimodal-Specific Adversarial &amp; Reasoning Safety</div>
+        <div class="ref-entry"><span class="ref-id">[R43]</span><span class="ref-text">Huang et al. (2024). Medical MLLM is Vulnerable: Cross-Modality Jailbreak and Mismatched Attacks. <a href="https://arxiv.org/abs/2405.20775" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R44]</span><span class="ref-text">Qi et al. (AAAI 2024). Visual Adversarial Examples Jailbreak Aligned Large Language Models. <a href="https://arxiv.org/abs/2306.13213" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R45]</span><span class="ref-text">(ACL 2025). Jailbreak Large Vision-Language Models Through Multi-Modal Linkage (MML). <a href="https://aclanthology.org/2025.acl-long.74.pdf" class="ref-link" target="_blank">ACL Anthology →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R46]</span><span class="ref-text">(2024). Safe Semantics, Unsafe Interpretations: Tackling Implicit Reasoning Safety in Large Vision-Language Models. arXiv.</span></div>
+        <div class="ref-entry"><span class="ref-id">[R47]</span><span class="ref-text">Shayegani et al. (2024). Jailbreak in Pieces: Compositional Adversarial Attacks on Multi-Modal Language Models. <a href="https://arxiv.org/abs/2307.04218" class="ref-link" target="_blank">arXiv →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R48]</span><span class="ref-text">Xia et al. (EMNLP 2024). RULE: Reliable Multimodal RAG for Factuality in Medical Vision Language Models. <a href="https://arxiv.org/abs/2410.05524" class="ref-link" target="_blank">arXiv →</a></span></div>
+      </div>
+
+      <div class="ref-group">
+        <div class="ref-group-title">Ethics, Liability &amp; Socioeconomic</div>
+        <div class="ref-entry"><span class="ref-id">[R49]</span><span class="ref-text">(Royal Society Open Science, 2025). Ethical and Legal Considerations in Healthcare AI: Innovation and Policy for Safe and Fair Use. <a href="https://royalsocietypublishing.org/rsos/article/12/5/241873/" class="ref-link" target="_blank">Royal Society →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R50]</span><span class="ref-text">(PLOS Digital Health, 2025). Ethical Challenges and Evolving Strategies in the Integration of AI into Clinical Practice. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11977975/" class="ref-link" target="_blank">PMC →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R51]</span><span class="ref-text">WHO (2024). Ethics and Governance of Artificial Intelligence for Health: Guidance on Large Multi-modal Models. <a href="https://www.who.int/publications/i/item/9789240084759" class="ref-link" target="_blank">WHO →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R52]</span><span class="ref-text">(Body &amp; Society, 2025). Towards Accountable, Legitimate and Trustworthy AI in Healthcare: Effective Data Stewardship. <a href="https://www.tandfonline.com/doi/full/10.1080/20502877.2025.2482282" class="ref-link" target="_blank">Tandfonline →</a></span></div>
+        <div class="ref-entry"><span class="ref-id">[R54]</span><span class="ref-text">(Advances in Consumer Research, 2025). The Intersection of Law, Ethics, and Healthcare AI: Policy Pathways for Responsible Innovation. <a href="https://acr-journal.com/article/the-intersection-of-law-ethics-and-healthcare-ai-policy-pathways-for-responsible-innovation-1695/" class="ref-link" target="_blank">ACR Journal →</a></span></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <span>Safety, Socioeconomic &amp; Ethical Risks of Multimodal AI in Healthcare · April 2026</span>
+  <span>54 papers · 6 categories · 24 sub-risks</span>
+</footer>
+
+<a href="#" class="back-top" title="Back to top">↑</a>
+
+<script>
+const btn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+function openSidebar() {
+  sidebar.classList.add('open');
+  overlay.classList.add('active');
+  btn.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+  btn.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+btn.addEventListener('click', () => {
+  sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+overlay.addEventListener('click', closeSidebar);
+
+// Close sidebar when a nav link is clicked on mobile
+sidebar.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) closeSidebar();
+  });
+});
+
+// Close sidebar on resize to desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) closeSidebar();
+});
+</script>
+
+</body>
+</html>
